@@ -1,18 +1,24 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <h1 class="header">Find all the matches</h1>
+    <div class="cardsContainer">
+      <div v-for="card in animalCards" :key="card.id">
+        <animalCards :card="card" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import { animalImages } from "./components/cardData.js";
+import animalCards from "./components/animalCard";
 
 export default {
-  name: "App",
-  components: {
-    HelloWorld
-  }
+  components: { animalCards },
+
+  data() {
+    return { animalCards: [...animalImages] };
+  },
 };
 </script>
 
@@ -24,5 +30,16 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.cardsContainer {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.header {
+  text-align: center;
 }
 </style>
