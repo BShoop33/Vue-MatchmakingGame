@@ -3,7 +3,7 @@
     <h1 class="header">Find all the matches</h1>
     <div class="cardsContainer">
       <div v-for="card in animalCards" :key="card.id">
-        <animalCards :card="card" />
+        <animalCards :card="card" @toggle="handleToggle" />
       </div>
     </div>
   </div>
@@ -15,6 +15,12 @@ import animalCards from "./components/animalCard";
 
 export default {
   components: { animalCards },
+
+  methods: {
+    handleToggle(card) {
+      card.answerShown = !card.answerShown;
+    },
+  },
 
   data() {
     return { animalCards: [...animalImages] };
