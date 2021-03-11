@@ -1,10 +1,33 @@
 <template>
-  <img class="animalImage" v-bind:src="card.image" alt="Animal Image" />
+  <img
+    class="animalImage"
+    @click="handleClick"
+    v-bind:src="cardView"
+    alt="Animal Image"
+  />
 </template>
 
 <script>
 export default {
   props: ["card"],
+
+  data() {
+    return {};
+  },
+
+  methods: {
+    handleClick() {
+      this.$emit("toggle", this.card);
+    },
+  },
+
+  computed: {
+    cardView() {
+      return this.card.answerShown
+        ? this.card.image
+        : "https://www.onoursleeves.org/-/media/nch/giving/images/on-our-sleeves-1010/icons/icon-teasers/w45084_iconcollectionlandingiconteaserimages_questionmark.jpg";
+    },
+  },
 };
 </script>
 
