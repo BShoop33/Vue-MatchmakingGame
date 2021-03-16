@@ -1,51 +1,78 @@
 <template>
   <div>
-    <h1 class="header">Find all the matches</h1>
     <div class="cardsContainer">
       <div v-for="card in animalCards" :key="card.id">
-        <animalCards :card="card" @toggle="handleToggle" />
+        <animalCards
+          :card="card"
+          @toggle="handleToggle"
+          :guess1="guess1"
+          :guess2="guess2"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { animalImages } from "./components/cardData.js";
 import animalCards from "./components/animalCard";
+import getAnimalImages from "./components/cardData.js";
+import shuffle from "lodash.shuffle";
 
 export default {
   components: { animalCards },
 
+  data() {
+    return {
+      animalCards: shuffle(getAnimalImages()),
+      guess1: null,
+      guess2: null,
+    };
+  },
+
   methods: {
-    handleToggle(card) {
-      card.answerShown = !card.answerShown;
+    handleToggle(cardClicked) {
+      if (this.guess1 === null) {
+        this.guess1 = cardClicked;
+        return;
+      }
+
+      if (this.guess1 === cardClicked) return;
+
+      this.guess2 = cardClicked;
+
+      const [animal1, animal2] = this.getAnimalImages(cardClicked.name);
+
+      if (this.guess1.name === this.guess2.name) {
+        animal1.foundMatch = true;
+        animal2.foundMatch = true;
+        this.guess1 = null;
+        this.guess2 = null;
+      } else {
+        setTimeout(() => {
+          this.guess1 = null;
+          this.guess2 = null;
+        }, 1000);
+      }
+    },
+
+    getAnimalImages(name) {
+      return this.animalCards.filter((l) => l.name === name);
     },
   },
 
-  data() {
-    return { animalCards: [...animalImages] };
+  computed: {
+    foundAllMatches() {
+      return this.card.every((l) => l.foundMatch);
+    },
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
 .cardsContainer {
   display: flex;
   flex-flow: row;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.header {
-  text-align: center;
 }
 </style>
